@@ -4,7 +4,7 @@ Plugin Name: Storenvy
 Plugin URI: http://trepmal.com/
 Description: DEV - Display your Storenvy products on your site
 Author: Kailey Lampert
-Version: 0.1
+Version: 0.2
 Author URI: http://kaileylampert.com/
 */
 /*
@@ -39,16 +39,16 @@ class se_storenvy {
 
         function menu() {
 
-                add_submenu_page( 'options-general.php' , 'Storenvy' , 'Storenvy' , 'administrator' , __FILE__ , array( &$this , 'page' ) );
+                add_options_page( 'Storenvy' , 'Storenvy' , 'administrator' , __FILE__ , array( &$this , 'page' ) );
 
         }// end menu()
 
         function customcss() {
-        
+       
         	$opts = get_option( 'storenvy' );
         	
-        	echo $opts[ 'customcss' ] ? '<style type="text/css">' . "\n" . $opts[ 'customcss' ] . "\n" . '</style>' . "\n" : '';
-        
+        	echo $opts['customcss'] ? '<style type="text/css">' . "\n" . $opts['customcss'] . "\n" . '</style>' . "\n" : '';
+       
         }// end customcss()
 
         function defaults() {
@@ -56,9 +56,9 @@ class se_storenvy {
 			return array( 'type' => 'items' , 'title' => 1 , 'link' => 1 , 'pubdate' => 1 , 'description' => 1 , 'image' => 1  , 'limit' => -1  , 'start' => 0 , 'fblike' => '1'  , 'tweet' => '1'  , 'per_page' => '-1' );
 
         }// end defaults()
-        
+       
         function show($atts) {
-        
+       
 				extract(shortcode_atts( $this->defaults() , $atts));
 	
 	        	$opts = get_option( 'storenvy' );
@@ -118,23 +118,20 @@ class se_storenvy {
 				return $js.'<div class="se-wrapper">' . $the_list . '</div>';
 
         }// end show()
-        
-        function fetch( $args = array() ) { 
+       
+        function fetch( $args = array() ) {
 
 				$args = wp_parse_args( $args , $this->defaults() );
 
         		extract( $args );
 
         		$opts = get_option( 'storenvy' );
-        		$url = $opts[ 'storeurl' ] . '/products.rss';
+        		if ( empty( $opts['storeurl'] ) ) return;
+        		$url = $opts['storeurl'] . '/products.rss';
 				$url = str_replace('//products.rss','/products.rss',$url);
 
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $url);
-				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				$data = curl_exec($ch);
-				curl_close($ch);
+				$page = wp_remote_get( $url );
+				$data = $page['body'];
 				
 				if (empty($data)) { return false; } // if nothing found in rss feed, do nothing
 				
@@ -147,9 +144,9 @@ class se_storenvy {
 				else if ($type == 'storeinfo')  return $storeinfo;
 				else if ($type == 'url')  		return $url;
 				else 							return $items;
-        
+       
         }// end fetch()
-        
+       
         function page() {
         		
 				$defaultvalues = array( 'storeurl' => '' , 'customcss' => '' , 'timeformat' => 'm/d/y' , 'pubdate_text' => 'Added on: ' );
@@ -160,10 +157,10 @@ class se_storenvy {
                 echo '<h2>'.__( 'Storenvy' , 'storenvy' ).'</h2>';
 
         		if (isset($_POST['submitted'])) {
-        			$url = esc_url( $_POST[ 'storeurl' ] );
-        			$css = stripslashes( $_POST[ 'customcss' ] );
-        			$timeformat = esc_attr( $_POST[ 'timeformat' ] );
-        			$pubdate_text = esc_attr( $_POST[ 'pubdate_text' ] );
+        			$url = esc_url( $_POST['storeurl'] );
+        			$css = stripslashes( $_POST['customcss'] );
+        			$timeformat = esc_attr( $_POST['timeformat'] );
+        			$pubdate_text = esc_attr( $_POST['pubdate_text'] );
         			$opts = array( 'storeurl' => $url , 'customcss' => $css , 'timeformat' => $timeformat , 'pubdate_text' => $pubdate_text );
         			if ( $opts != $userset ) {
 						check_admin_referer( 'storenvy-save' );
@@ -171,7 +168,7 @@ class se_storenvy {
 	        		}
         		}
 
-				if ( isset( $_POST[ 'clear' ] ) ) {
+				if ( isset( $_POST['clear'] ) ) {
 					if ( !isset( $_POST['confirm'])) {
 						echo '<p>' . __( 'You must confirm for a reset' , 'storenvy' ) . '</p>';
 					}
@@ -191,7 +188,7 @@ class se_storenvy {
 				<p>
 					<label for="storeurl">
 						<?php _e( 'Store URL' , 'storenvy' ); ?>
-						<input type="text" name="storeurl" id="storeurl" value="<?php echo $values[ 'storeurl' ]; ?>" />
+						<input type="text" name="storeurl" id="storeurl" value="<?php echo $values['storeurl']; ?>" />
 					</label><br />
 					<?php _e( 'For example, <em>http://yourstore.storenvy.com</em>' , 'storenvy' ); ?>
 				</p>
@@ -199,7 +196,7 @@ class se_storenvy {
 				<p>
 					<input type="hidden" name="submitted" /><input type="submit" name="submitted" value="<?php _e( 'Save' , 'storenvy' ); ?>" class="save" />
 					<?php
-	                	echo ($storeinfo = $this->fetch(array('type'=>'storeinfo'))) ? 
+	                	echo ($storeinfo = $this->fetch(array('type'=>'storeinfo'))) ?
 	                	__( 'It looks like your store name is' , 'storenvy' ) . ' <strong>'.$storeinfo->title.'</strong>' :
 	                	__( 'Once your store url is saved, you should see your store name here' , 'storevny' );
 					?>
@@ -210,7 +207,7 @@ class se_storenvy {
 				<p>
 					<label for="timeformat">
 						<?php _e( 'Published date format' , 'storenvy' ); ?>
-						<input type="text" name="timeformat" id="timeformat" value="<?php echo $values[ 'timeformat' ]; ?>" />
+						<input type="text" name="timeformat" id="timeformat" value="<?php echo $values['timeformat']; ?>" />
 					</label><br />
 					<?php _e( 'PHP format, <a href="http://www.php.net/manual/en/function.date.php">http://www.php.net/manual/en/function.date.php</a>' , 'storenvy' ); ?>
 				</p>
@@ -218,7 +215,7 @@ class se_storenvy {
 				<p>
 					<label for="pubdate_text">
 						<?php _e( 'Published date text' , 'storenvy' ); ?>
-						<input type="text" name="pubdate_text" id="pubdate_text" value="<?php echo $values[ 'pubdate_text' ]; ?>" />
+						<input type="text" name="pubdate_text" id="pubdate_text" value="<?php echo $values['pubdate_text']; ?>" />
 					</label><br />
 					<?php _e( 'For example, <em>Added on: </em> 06/22/10' , 'storenvy' ); ?>
 				</p>
@@ -226,7 +223,7 @@ class se_storenvy {
 				<p>
 					<label for="customcss" style="float:left;">
 						<?php _e( 'Customize CSS' , 'storenvy' ); ?><br />
-						<textarea name="customcss" id="customcss" rows="8" cols="60" style="float:left;"><?php echo $values[ 'customcss' ]; ?></textarea>
+						<textarea name="customcss" id="customcss" rows="8" cols="60" style="float:left;"><?php echo $values['customcss']; ?></textarea>
 					</label><pre style="margin-top:1em;float:left;padding:1px;"><?php include('starter.css'); ?></pre>
 				</p>
 
@@ -241,72 +238,72 @@ class se_storenvy {
 
                 <?php
                 echo '</div>';
-
+               
         }// end page()
 
 		function help( $contextual_help, $screen_id, $screen ) {
 			if ('settings_page_storenvy/storenvy' == $screen->id ) {
 				$help = '<h3>' . __( 'The Shortcode' , 'storenvy' ) . '</h3>';
-                
-                $help .= '<p><code>[storenvy]</code> ' . 
+               
+                $help .= '<p><code>[storenvy]</code> ' .
                 __( 'Add this to any page or post to show all the details for all your products' , 'storevny' )
                 . '</p>';
-                
+               
                 $help .= '<h4>' . __( 'Attributes' , 'storenvy' ) . '</h4>';
 
-                $help .= '<p><code>title=(0/<strong>1</strong>)</code> ' . 
+                $help .= '<p><code>title=(0/<strong>1</strong>)</code> ' .
                 __( 'True (1) to show title, false (0) to hide title. Default = 1' , 'storevny' )
                 . '</p>';
-                
-                $help .= '<p><code>link=(0/<strong>1</strong>)</code> ' . 
+               
+                $help .= '<p><code>link=(0/<strong>1</strong>)</code> ' .
                 __( 'True (1) to add link to title, false (0) to remove link. Default = 1' , 'storevny' )
                 . '</p>';
-                
-                $help .= '<p><code>pubdate=(0/<strong>1</strong>)</code> ' . 
+               
+                $help .= '<p><code>pubdate=(0/<strong>1</strong>)</code> ' .
                 __( 'True (1) to show published date, false (0) to hide published date. Default = 1' , 'storevny' )
                 . '</p>';
-                
-                $help .= '<p><code>description=(0/<strong>1</strong>)</code> ' . 
+               
+                $help .= '<p><code>description=(0/<strong>1</strong>)</code> ' .
                 __( 'True (1) to show description, false (0) to hide description. Default = 1' , 'storevny' )
                 . '</p>';
-                
-                $help .= '<p><code>image=(0/<strong>1</strong>)</code> ' . 
+               
+                $help .= '<p><code>image=(0/<strong>1</strong>)</code> ' .
                 __( 'True (1) to show image, false (0) to hide image. Default = 1' , 'storevny' )
                 . '</p>';
-                
-                $help .= '<p><code>limit=(<em>n</em>)</code> ' . 
+               
+                $help .= '<p><code>limit=(<em>n</em>)</code> ' .
                 __( 'Display <em>n</em> items. Default = -1 (all)' , 'storevny' )
                 . '</p>';
-                
-                $help .= '<p><code>start=(<em>n</em>)</code> ' . 
+               
+                $help .= '<p><code>start=(<em>n</em>)</code> ' .
                 __( 'Start displaying after <em>n</em> items (or, skip the first <em>n</em> items). Default = 0' , 'storevny' )
                 . '</p>';
-                
-                $help .= '<p><code>fblike=(0/<strong>1</strong>)</code> ' . 
+               
+                $help .= '<p><code>fblike=(0/<strong>1</strong>)</code> ' .
                 __( 'True (1) to show Facebook Like button, false (0) to hide Facebook Like button. Default = 1' , 'storevny' )
                 . '</p>';
-                
-                $help .= '<p><code>tweet=(0/<strong>1</strong>)</code> ' . 
+               
+                $help .= '<p><code>tweet=(0/<strong>1</strong>)</code> ' .
                 __( 'True (1) to show share on Twitter link, false (0) to hide share on Twitter link. Default = 1' , 'storevny' )
                 . '</p>';
-                
+               
                 $help .= '<h4>' . __( 'Usage' , 'storenvy' ) . '</h4>';
 
-                $help .= '<p><code>[storenvy image=0 pubdate=0 limit=5]</code> ' . 
+                $help .= '<p><code>[storenvy image=0 pubdate=0 limit=5]</code> ' .
                 __( 'Show the first 5 items. Hide images and published dates.' , 'storevny' )
                 . '</p>';
-                
+               
                 $help .= '<h3>' . __( 'The Template Tag' , 'storenvy' ) . '</h3>';
 
-                $help .= '<p><code>' . htmlentities( '<?php $help .= storenvy( ); ?>' ) . '</code> ' . 
+                $help .= '<p><code>' . htmlentities( '<?php $help .= storenvy( ); ?>' ) . '</code> ' .
                 __( 'The equivalent of <code>[storenvy]</code>.' , 'storevny' )
                 . '</p>';
-                
-                $help .= '<p><code>' . htmlentities( '<?php $args = array( \'image\' => 0 , \'pubdate\' => 0 , \'limit\' => 5 ); $help .= storenvy( $args ); ?>' ) . '</code> ' . 
+               
+                $help .= '<p><code>' . htmlentities( '<?php $args = array( \'image\' => 0 , \'pubdate\' => 0 , \'limit\' => 5 ); $help .= storenvy( $args ); ?>' ) . '</code> ' .
                 __( 'The equivalent of <code>[storenvy image=0 pubdate=0 limit=5]</code>.' , 'storevny' )
                 . '</p>';
 
-                $help .= '<p><code>' . htmlentities( '<?php if ( function_exists( \'storenvy\' ) ) { $help .= storenvy( ); } ?>' ) . '</code> ' . 
+                $help .= '<p><code>' . htmlentities( '<?php if ( function_exists( \'storenvy\' ) ) { $help .= storenvy( ); } ?>' ) . '</code> ' .
                 __( 'For safety, check to make sure the function exists before using it.' , 'storevny' )
                 . '</p>';
 				$help . '<form method="post"><p><input type="submit" name="clear" value = "' . __( 'Reset' , 'storenvy' ) . '" /> <label for="confirm_delete">' . __( 'Check to confirm' , 'storenvy' ) . '<input type="checkbox" name="confirm" id="confirm_delete" value="true" /></label></p></form>';

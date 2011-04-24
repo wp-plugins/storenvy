@@ -19,6 +19,8 @@ The plugin has not been tested with anything prior to WordPress 3.0 (at least no
 
 Supports shorcodes and template tags.
 
+[vimeo http://vimeo.com/22814757]
+
 == Installation ==
 
 1. Upload `storenvy` directory to the `/wp-content/plugins/` directory
@@ -26,6 +28,7 @@ Supports shorcodes and template tags.
 3. Find Settings > Storenvy
 4. Enter your store's URL
 5. Place [storenvy] in a page or post
+6. [walkthrough on vimeo](http://vimeo.com/22814757)
 
 == Frequently Asked Questions ==
 
@@ -39,6 +42,10 @@ If you find something that doesn't work, **please let me know (trepmal (at) gmai
 1. 
 
 == Changelog ==
+
+= 0.2 =
+* (Still in beta) Better code for retrieving the RSS file
+* whitespace cleanup
 
 = 0.1 =
 * First Beta release
