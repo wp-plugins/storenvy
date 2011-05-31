@@ -2,13 +2,13 @@
 /*
 Plugin Name: Storenvy
 Plugin URI: http://trepmal.com/
-Description: DEV - Display your Storenvy products on your site
+Description: Display your Storenvy products on your site
 Author: Kailey Lampert
 Version: 0.2
 Author URI: http://kaileylampert.com/
 */
 /*
-    Copyright (C) 2010  Kailey Lampert
+    Copyright (C) 2011  Kailey Lampert
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -318,4 +318,3 @@ function storenvy( $args = array() ) {
 	global $se_storenvy;
 	return $se_storenvy->show( $args );
 }
-?>
