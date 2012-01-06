@@ -3,8 +3,8 @@ Contributors: trepmal
 Donate link: http://kaileylampert.com/donate
 Tags: storenvy
 Requires at least: 3.0
-Tested up to: 3.2-beta2
-Stable tag: trunk
+Tested up to: 3.3
+Stable tag: 0.3
 
 Get and display items from your Storenvy shop
 
@@ -35,11 +35,22 @@ Supports shorcodes and template tags.
 This is definitely still in beta. While the plugin works for my tests, I need more feedback to try and get it to rock-solid status.
 If you find something that doesn't work, **please let me know (trepmal (at) gmail (dot) com)** rather than just leaving poor feedback.
 
+= The layout is screwy =
+
+Try adding `div.se-item { clear:both; }`
+
+Better yet, find some CSS tutorials so you can fully customize the layout.
+
 == Screenshots ==
 
 1. 
 
 == Changelog ==
+
+= 0.3 =
+* Still "beta"
+* Add default CSS
+* Little bit of code cleanup
 
 = 0.2 =
 * (Still in beta) Better code for retrieving the RSS file
