@@ -10,6 +10,8 @@ Get and display items from your Storenvy shop
 
 == Description ==
 
+**Important** This plugin is having some known issues after changes to the Storenvy API. Fixes are in development. Sorry for the inconvenience. When scientists figure out how to put more hours in the day, we'll be able to keep up with this stuff...
+
 This is a plugin for getting items from a Storenvy shop and displaying them. It gets the info from the 'products.rss' feed, so only information that's in the feed can be pulled in to your page/post (title, picture, description, date item was added)
 The plugin allows you to configure how the info is displayed. How many items to show, which info is displayed...
 
