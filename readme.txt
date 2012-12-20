@@ -4,7 +4,7 @@ Donate link: http://kaileylampert.com/donate
 Tags: storenvy
 Requires at least: 3.0
 Tested up to: 3.3
-Stable tag: 0.3
+Stable tag: 0.4
 
 Get and display items from your Storenvy shop
 
@@ -17,16 +17,14 @@ The plugin has not been tested with anything prior to WordPress 3.0 (at least no
 
 Supports shorcodes and template tags.
 
-[vimeo http://vimeo.com/22814757]
 
 == Installation ==
 
 1. Upload `storenvy` directory to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Find Settings > Storenvy
-4. Enter your store's URL
-5. Place [storenvy] in a page or post
-6. [walkthrough on vimeo](http://vimeo.com/22814757)
+1. Activate the plugin through the 'Plugins' menu in WordPress
+1. Find Settings > Storenvy
+1. Enter your store's URL
+1. Place [storenvy] in a page or post
 
 == Frequently Asked Questions ==
 
@@ -45,7 +43,22 @@ Better yet, find some CSS tutorials so you can fully customize the layout.
 
 1. 
 
+== Other Notes ==
+
+= Old Vimeo Walkthrough =
+[vimeo http://vimeo.com/22814757]
+
+== Upgrade Notice ==
+
+= 0.4 =
+* Works again. Basic start to get you going again.
+
 == Changelog ==
+
+= 0.4 =
+* Beta again! (errr... still.)
+* Works with new Storenvy API
+* Hopefully a good start to get you going again. Basic options for now, will aim to get more added soon.
 
 = 0.3 =
 * Still "beta"
