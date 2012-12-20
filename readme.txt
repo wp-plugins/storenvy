@@ -3,20 +3,19 @@ Contributors: trepmal
 Donate link: http://kaileylampert.com/donate
 Tags: storenvy
 Requires at least: 3.0
-Tested up to: 3.3
+Tested up to: 3.5
 Stable tag: 0.4
 
 Get and display items from your Storenvy shop
 
 == Description ==
 
-This is a plugin for getting items from a Storenvy shop and displaying them. It gets the info from the 'products.rss' feed, so only information that's in the feed can be pulled in to your page/post (title, picture, description, date item was added)
-The plugin allows you to configure how the info is displayed. How many items to show, which info is displayed...
+This is a plugin for getting items from a Storenvy shop and displaying them. It gets the info from the 'products.json' feed, so only information that's in the feed can be pulled in to your page/post.
+The plugin allows you to configure how the info is displayed.
 
 The plugin has not been tested with anything prior to WordPress 3.0 (at least not recently)
 
 Supports shorcodes and template tags.
-
 
 == Installation ==
 

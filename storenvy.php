@@ -62,6 +62,7 @@ class se_storenvy {
 
 [description]
 
+[gallery]
 <hr />';
 			add_option( 'storenvy', array( 'storeurl' => '' , 'customcss' => 'div.se-item { clear:both; }', 'itemformat' => $itemformat ) );
 
@@ -139,15 +140,14 @@ class se_storenvy {
 			</form>
 			<?php
 			##testing##
-			// echo $values['storeurl']; echo '<hr />';
-			$products = $this->_get_store_products( $values['storeurl'] );
+
+			// $products = $this->_get_store_products( $values['storeurl'] );
 
 			// $keys = array_keys( (array) $products[0] );
 			// printer( $keys );
 
-			$product_ids = wp_list_pluck( $products, 'id' );
-			// printer( $product_ids );
-			$products = array_combine( $product_ids, $products );
+			// $product_ids = wp_list_pluck( $products, 'id' );
+			// $products = array_combine( $product_ids, $products );
 			// printer( $products );
 			##/testing##
 			?>
